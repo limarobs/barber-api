@@ -18,6 +18,7 @@ public class ClienteController {
 
     private final ClienteService service;
 
+    //GET
     @GetMapping
     public List<Cliente> listarClientes(){
         return service.listaClientes();
@@ -29,12 +30,14 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
+    //PUT
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> attCliente(@PathVariable Long id, @RequestBody @Valid ClienteRequestDto request){
         Cliente atualizado = service.atualizaCliente(id, request);
         return ResponseEntity.ok(atualizado);
     }
 
+    //DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id){
         service.deletaCliente(id);
@@ -42,6 +45,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    //POST
     @PostMapping
     public ResponseEntity<Cliente> addCliente(@RequestBody @Valid ClienteRequestDto request){
         Cliente criado = service.adicionaCliente(request);

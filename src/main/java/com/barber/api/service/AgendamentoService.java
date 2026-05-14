@@ -1,6 +1,7 @@
 package com.barber.api.service;
 
 import com.barber.api.dto.AgendamentoRequestDto;
+import com.barber.api.dto.AgendamentoResponseDto;
 import com.barber.api.entity.Agendamento;
 import com.barber.api.entity.Cliente;
 import com.barber.api.exception.HorarioIndisponivelException;
@@ -9,6 +10,7 @@ import com.barber.api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,16 +21,39 @@ public class AgendamentoService {
     private final ClienteRepository crepository;
     private final ClienteService service;
 
-    public List<Agendamento> listaAgendamentos(){
-        return repository.findAll();
+    public List<AgendamentoResponseDto> listaAgendamentos(){
+        List <Agendamento> agendamentos = repository.findAll();
+        List <AgendamentoResponseDto> response = new ArrayList<>();
+
+
+
+        for(Agendamento agendamento : agendamentos){
+            AgendamentoResponseDto dto =
+                    new AgendamentoResponseDto(
+                            agendamento.getId(),
+                            agendamento.getDataHora(),
+                            agendamento.getCliente().getNome(),
+                            agendamento.getCliente().getTelefone()
+                    );
+            response.add(dto);
+        }
+
+        return response;
+
     }
 
-    public Agendamento listaAgendamentoId(Long id){
-        Optional<Agendamento> agendamento = repository.findById(id);
-        return agendamento.get();
+    public AgendamentoResponseDto listaAgendamentoId(Long id){
+        Optional<Agendamento> agendamentoOptional = repository.findById(id);
+        Agendamento agendamento = agendamentoOptional.get();
+        return new AgendamentoResponseDto(
+                agendamento.getId(),
+                agendamento.getDataHora(),
+                agendamento.getCliente().getNome(),
+                agendamento.getCliente().getTelefone()
+        );
     }
 
-    public Agendamento atualizaAgendamento(Long id, AgendamentoRequestDto request){
+    public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
         Optional<Agendamento> agendamentoOptional = repository.findById(id);
         Agendamento agendamento = agendamentoOptional.get();
 
@@ -43,29 +68,43 @@ public class AgendamentoService {
         agendamento.setDataHora(request.getDataHora());
         agendamento.setCliente(cliente);
 
-        return repository.save(agendamento);
+        Agendamento salvo =  repository.save(agendamento);
 
+        return new AgendamentoResponseDto(
+                salvo.getId(),
+                salvo.getDataHora(),
+                salvo.getCliente().getNome(),
+                salvo.getCliente().getTelefone()
+        );
     }
-
 
     public void deletaAgendamento(Long id){
         repository.deleteById(id);
     }
 
-    public Agendamento criaAgendamento(AgendamentoRequestDto request){
-
+    public AgendamentoResponseDto criaAgendamento(AgendamentoRequestDto request){
         if(repository.existsByDataHora(request.getDataHora())){
             throw new HorarioIndisponivelException("Horário indisponível");
         }
 
         Agendamento agendamento = new Agendamento();
+
         Cliente cliente = service.listaClienteId(request.getClienteId());
+
         agendamento.setCliente(cliente);
         agendamento.setDataHora(request.getDataHora());
 
-        return repository.save(agendamento);
+        Agendamento salvo = repository.save(agendamento);
 
+        return new AgendamentoResponseDto(
+                salvo.getId(),
+                salvo.getDataHora(),
+                salvo.getCliente().getNome(),
+                salvo.getCliente().getTelefone()
+        );
     }
+
+
 
 
 
