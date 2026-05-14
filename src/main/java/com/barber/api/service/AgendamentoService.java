@@ -21,20 +21,21 @@ public class AgendamentoService {
     private final ClienteRepository crepository;
     private final ClienteService service;
 
+    private AgendamentoResponseDto toResponseDto(Agendamento agendamento){
+        return new AgendamentoResponseDto(
+                agendamento.getId(),
+                agendamento.getDataHora(),
+                agendamento.getCliente().getTelefone(),
+                agendamento.getCliente().getNome()
+        );
+    }
+
     public List<AgendamentoResponseDto> listaAgendamentos(){
         List <Agendamento> agendamentos = repository.findAll();
         List <AgendamentoResponseDto> response = new ArrayList<>();
 
-
-
         for(Agendamento agendamento : agendamentos){
-            AgendamentoResponseDto dto =
-                    new AgendamentoResponseDto(
-                            agendamento.getId(),
-                            agendamento.getDataHora(),
-                            agendamento.getCliente().getNome(),
-                            agendamento.getCliente().getTelefone()
-                    );
+            AgendamentoResponseDto dto = toResponseDto(agendamento);
             response.add(dto);
         }
 
@@ -45,12 +46,7 @@ public class AgendamentoService {
     public AgendamentoResponseDto listaAgendamentoId(Long id){
         Optional<Agendamento> agendamentoOptional = repository.findById(id);
         Agendamento agendamento = agendamentoOptional.get();
-        return new AgendamentoResponseDto(
-                agendamento.getId(),
-                agendamento.getDataHora(),
-                agendamento.getCliente().getNome(),
-                agendamento.getCliente().getTelefone()
-        );
+        return toResponseDto(agendamento);
     }
 
     public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
@@ -70,12 +66,7 @@ public class AgendamentoService {
 
         Agendamento salvo =  repository.save(agendamento);
 
-        return new AgendamentoResponseDto(
-                salvo.getId(),
-                salvo.getDataHora(),
-                salvo.getCliente().getNome(),
-                salvo.getCliente().getTelefone()
-        );
+        return toResponseDto(salvo);
     }
 
     public void deletaAgendamento(Long id){
@@ -96,12 +87,7 @@ public class AgendamentoService {
 
         Agendamento salvo = repository.save(agendamento);
 
-        return new AgendamentoResponseDto(
-                salvo.getId(),
-                salvo.getDataHora(),
-                salvo.getCliente().getNome(),
-                salvo.getCliente().getTelefone()
-        );
+        return toResponseDto(salvo);
     }
 
 
