@@ -4,12 +4,16 @@ import com.barber.api.dto.AgendamentoRequestDto;
 import com.barber.api.dto.AgendamentoResponseDto;
 import com.barber.api.entity.Agendamento;
 import com.barber.api.entity.Cliente;
+import com.barber.api.exception.DataInvalidaException;
 import com.barber.api.exception.HorarioIndisponivelException;
 import com.barber.api.repository.AgendamentoRepository;
 import com.barber.api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +24,7 @@ public class AgendamentoService {
     private final AgendamentoRepository repository;
     private final ClienteRepository crepository;
     private final ClienteService service;
+
 
     private AgendamentoResponseDto toResponseDto(Agendamento agendamento){
         return new AgendamentoResponseDto(
@@ -74,9 +79,24 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponseDto criaAgendamento(AgendamentoRequestDto request){
+        LocalTime horario = request.getDataHora().toLocalTime();
+
+        LocalTime abertura = LocalTime.of(9, 0);
+
+        LocalTime fechamento = LocalTime.of(19, 0);
+
         if(repository.existsByDataHora(request.getDataHora())){
             throw new HorarioIndisponivelException("Horário indisponível");
         }
+
+        if(request.getDataHora().isBefore(LocalDateTime.now())){
+            throw new DataInvalidaException("Não é possível agendar no passado");
+        }
+
+        if(horario.isBefore(abertura) || horario.isAfter(fechamento)){
+            throw new HorarioIndisponivelException("Não é possível agendar no passado");
+        }
+
 
         Agendamento agendamento = new Agendamento();
 
