@@ -14,8 +14,11 @@ public interface AgendamentoRepository
         extends JpaRepository<Agendamento, Long> {
 
     boolean existsByDataHora(LocalDateTime dataHora);
-
+    
     List<Agendamento> findByStatus(StatusAgendamento status);
+
+    List<Agendamento> findByDataHoraBetweenAndStatus(LocalDateTime inicio, LocalDateTime fim, StatusAgendamento status);
+
 
 
 }

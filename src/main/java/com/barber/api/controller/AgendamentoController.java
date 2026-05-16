@@ -32,8 +32,13 @@ public class AgendamentoController {
     }
 
     @GetMapping("/ativos")
-    public List<AgendamentoResponseDto> listarAgendamentoAtivos(){
+    public List<AgendamentoResponseDto> listarAgendamentosAtivos(){
         return service.listaAgendamentosAtivos();
+    }
+
+    @GetMapping("/hoje")
+    public List<AgendamentoResponseDto> listarAgendamentosHoje(){
+        return service.listaAgendamentosHoje();
     }
 
     //PUT

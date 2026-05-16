@@ -11,9 +11,11 @@ import com.barber.api.exception.HorarioIndisponivelException;
 import com.barber.api.repository.AgendamentoRepository;
 import com.barber.api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -85,8 +87,27 @@ public class AgendamentoService {
         return response;
     }
 
+    public List<AgendamentoResponseDto> listaAgendamentosHoje(){
 
-        public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
+        LocalDate hoje = LocalDate.now();
+
+        LocalDateTime inicio = hoje.atStartOfDay();
+        LocalDateTime fim = hoje.atTime(23, 59, 59);
+        List <Agendamento> agendamentos = repository.findByDataHoraBetweenAndStatus(inicio, fim, StatusAgendamento.AGENDADO);
+        List <AgendamentoResponseDto> response = new ArrayList<>();
+
+        for(Agendamento agendamento : agendamentos){
+            AgendamentoResponseDto dto = toResponseDto(agendamento);
+            response.add(dto);
+        }
+
+        return response;
+
+    }
+
+
+
+    public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
         Optional<Agendamento> agendamentoOptional = repository.findById(id);
         Agendamento agendamento = agendamentoOptional.get();
 
