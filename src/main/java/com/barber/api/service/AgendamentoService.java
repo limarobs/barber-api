@@ -5,6 +5,7 @@ import com.barber.api.dto.AgendamentoResponseDto;
 import com.barber.api.entity.Agendamento;
 import com.barber.api.entity.Cliente;
 import com.barber.api.enums.StatusAgendamento;
+import com.barber.api.exception.OperacaoInvalidaException;
 import com.barber.api.exception.DataInvalidaException;
 import com.barber.api.exception.HorarioIndisponivelException;
 import com.barber.api.repository.AgendamentoRepository;
@@ -35,6 +36,16 @@ public class AgendamentoService {
                 agendamento.getCliente().getNome()
         );
     }
+
+    private void validarCancelamento(Agendamento agendamento){
+        if(agendamento.getStatus() == StatusAgendamento.CANCELADO)
+            throw new OperacaoInvalidaException("Esse agendamento está cancelado");
+
+        if(agendamento.getStatus() == StatusAgendamento.FINALIZADO)
+            throw new OperacaoInvalidaException("Esse agendamento já está finalizado");
+    }
+
+    // --
 
     public List<AgendamentoResponseDto> listaAgendamentos(){
         List <Agendamento> agendamentos = repository.findAll();
@@ -78,6 +89,8 @@ public class AgendamentoService {
     public AgendamentoResponseDto cancelaAgendamento(Long id){
         Optional<Agendamento> agendamentoOptional = repository.findById(id);
         Agendamento agendamento = agendamentoOptional.get();
+
+        validarCancelamento(agendamento);
 
         agendamento.setStatus(StatusAgendamento.CANCELADO);
         Agendamento salvo = repository.save(agendamento);
