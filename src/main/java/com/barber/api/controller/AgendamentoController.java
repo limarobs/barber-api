@@ -38,12 +38,19 @@ public class AgendamentoController {
         return ResponseEntity.ok(atualizado);
     }
 
-    //DELETE
+    //PATCH
     @PatchMapping("/{id}/cancelar")
     public ResponseEntity<AgendamentoResponseDto> cancelarAgendamento(@PathVariable Long id){
         AgendamentoResponseDto cancelado = service.cancelaAgendamento(id);
 
         return ResponseEntity.ok(cancelado);
+    }
+
+    @PatchMapping("/{id}/finalizar")
+    public ResponseEntity<AgendamentoResponseDto> finalizarAgendamento(@PathVariable Long id){
+        AgendamentoResponseDto finalizado = service.finalizaAgendamento(id);
+
+        return ResponseEntity.ok(finalizado);
     }
 
     //POST

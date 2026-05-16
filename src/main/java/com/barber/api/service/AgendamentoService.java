@@ -39,6 +39,14 @@ public class AgendamentoService {
 
     private void validarCancelamento(Agendamento agendamento){
         if(agendamento.getStatus() == StatusAgendamento.CANCELADO)
+            throw new OperacaoInvalidaException("Esse agendamento já está cancelado");
+
+        if(agendamento.getStatus() == StatusAgendamento.FINALIZADO)
+            throw new OperacaoInvalidaException("Esse agendamento está finalizado");
+    }
+
+    private void validarFinalizacao (Agendamento agendamento){
+        if(agendamento.getStatus() == StatusAgendamento.CANCELADO)
             throw new OperacaoInvalidaException("Esse agendamento está cancelado");
 
         if(agendamento.getStatus() == StatusAgendamento.FINALIZADO)
@@ -96,6 +104,19 @@ public class AgendamentoService {
         Agendamento salvo = repository.save(agendamento);
 
         return toResponseDto(salvo);
+    }
+
+    public AgendamentoResponseDto finalizaAgendamento(Long id){
+        Optional<Agendamento> agendamentoOptional = repository.findById(id);
+        Agendamento agendamento = agendamentoOptional.get();
+
+        validarFinalizacao(agendamento);
+
+        agendamento.setStatus(StatusAgendamento.FINALIZADO);
+        Agendamento salvo = repository.save(agendamento);
+
+        return toResponseDto(salvo);
+
     }
 
     public AgendamentoResponseDto criaAgendamento(AgendamentoRequestDto request){
