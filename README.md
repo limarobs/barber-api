@@ -14,25 +14,25 @@ API REST para gerenciamento de clientes e agendamentos de uma barbearia, desenvo
 
 ## Funcionalidades
 
-- Cadastro, listagem, atualização e remoção de clientes
-- Criação e gestão de agendamentos
-- Cancelamento e finalização de agendamentos
+- Cadastro, listagem, atualizacao e remocao de clientes
+- Criacao e gestao de agendamentos
+- Cancelamento e finalizacao de agendamentos
 - Consulta de agendamentos ativos
 - Consulta de agendamentos do dia
-- Consulta de horários disponíveis por data
+- Consulta de horarios disponiveis por data
 
-## Regras de negócio atuais
+## Regras de negocio atuais
 
-- O agendamento não pode ser criado para uma data no passado
-- O horário de atendimento vai de `09:00` até `19:00`
-- Não é permitido criar dois agendamentos no mesmo `dataHora`
+- O agendamento nao pode ser criado para uma data no passado
+- O horario de atendimento vai de `09:00` ate `19:00`
+- Nao e permitido criar dois agendamentos no mesmo `dataHora`
 - Apenas agendamentos com status `AGENDADO` aparecem nas rotas de ativos e do dia
-- Um agendamento cancelado não pode ser finalizado
-- Um agendamento finalizado não pode ser cancelado
+- Um agendamento cancelado nao pode ser finalizado
+- Um agendamento finalizado nao pode ser cancelado
 
-## Configuração do banco
+## Configuracao do banco
 
-As propriedades atuais estão em `src/main/resources/application.properties`:
+As propriedades atuais estao em `src/main/resources/application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/barber-api
@@ -41,20 +41,20 @@ spring.datasource.password=123
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-Antes de subir a aplicação, crie um banco PostgreSQL chamado `barber-api`.
+Antes de subir a aplicacao, crie um banco PostgreSQL chamado `barber-api`.
 
 ## Como executar
 
-### Pré-requisitos
+### Pre-requisitos
 
 - Java 21 instalado
-- PostgreSQL em execução
+- PostgreSQL em execucao
 
 ### Passos
 
-1. Ajuste as credenciais do banco em `src/main/resources/application.properties`, se necessário.
+1. Ajuste as credenciais do banco em `src/main/resources/application.properties`, se necessario.
 2. Crie o banco `barber-api` no PostgreSQL.
-3. Execute a aplicação:
+3. Execute a aplicacao:
 
 ```bash
 ./mvnw spring-boot:run
@@ -66,7 +66,7 @@ No Windows:
 .\mvnw.cmd spring-boot:run
 ```
 
-Por padrão, a API sobe em:
+Por padrao, a API sobe em:
 
 ```text
 http://localhost:8080
@@ -105,12 +105,10 @@ Resposta da API:
 {
   "id": 1,
   "dataHora": "2026-05-20T10:00:00",
-  "clienteNome": "11999999999",
-  "clienteTelefone": "Roberto"
+  "clienteNome": "Roberto",
+  "clienteTelefone": "11999999999"
 }
 ```
-
-Observação: hoje o `AgendamentoResponseDto` está retornando `clienteNome` e `clienteTelefone` invertidos em relação ao conteúdo real retornado pela aplicação.
 
 ## Endpoints
 
@@ -137,10 +135,10 @@ Body:
 }
 ```
 
-Validações:
+Validacoes:
 
-- `nome`: obrigatório, entre 3 e 120 caracteres
-- `telefone`: obrigatório, entre 9 e 11 caracteres
+- `nome`: obrigatorio, entre 3 e 120 caracteres
+- `telefone`: obrigatorio, entre 9 e 11 caracteres
 
 #### `PUT /clientes/{id}`
 
@@ -179,9 +177,9 @@ Lista os agendamentos `AGENDADO` da data atual do servidor.
 
 #### `GET /agendamentos/disponiveis?data=2026-05-20`
 
-Retorna os horários livres do dia informado.
+Retorna os horarios livres do dia informado.
 
-Horários considerados pela aplicação:
+Horarios considerados pela aplicacao:
 
 ```text
 09:00, 10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00, 17:00, 18:00, 19:00
@@ -223,7 +221,7 @@ Altera o status do agendamento para `FINALIZADO`.
 
 ## Status de agendamento
 
-Os valores possíveis são:
+Os valores possiveis sao:
 
 - `AGENDADO`
 - `CANCELADO`
@@ -231,10 +229,10 @@ Os valores possíveis são:
 
 ## Tratamento de erros atual
 
-A API já trata estas exceções com resposta `400 Bad Request`:
+A API ja trata estas excecoes com resposta `400 Bad Request`:
 
-- horário indisponível
-- data inválida
+- horario indisponivel
+- data invalida
 
 Formato de resposta:
 
@@ -246,8 +244,21 @@ Formato de resposta:
 
 ## Pontos em aberto no projeto
 
-- `AuthController` existe, mas ainda não possui endpoints implementados
-- `BarbeiroController` existe, mas ainda não possui endpoints implementados
-- Não há documentação Swagger/OpenAPI configurada
-- Algumas exceções como busca por ID inexistente ainda não possuem tratamento global
+- `AuthController` existe, mas ainda nao possui endpoints implementados
+- `BarbeiroController` existe, mas ainda nao possui endpoints implementados
+- Nao ha documentacao Swagger/OpenAPI configurada
+- Algumas excecoes como busca por ID inexistente ainda nao possuem tratamento global
 
+## Testes
+
+Para rodar os testes:
+
+```bash
+./mvnw test
+```
+
+No Windows:
+
+```powershell
+.\mvnw.cmd test
+```

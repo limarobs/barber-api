@@ -33,8 +33,8 @@ public class AgendamentoService {
         return new AgendamentoResponseDto(
                 agendamento.getId(),
                 agendamento.getDataHora(),
-                agendamento.getCliente().getTelefone(),
-                agendamento.getCliente().getNome()
+                agendamento.getCliente().getNome(),
+                agendamento.getCliente().getTelefone()
         );
     }
 
