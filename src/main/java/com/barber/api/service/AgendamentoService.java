@@ -54,8 +54,6 @@ public class AgendamentoService {
             throw new OperacaoInvalidaException("Esse agendamento já está finalizado");
     }
 
-    // --
-
     public List<AgendamentoResponseDto> listaAgendamentos(){
         List <Agendamento> agendamentos = repository.findAll();
         List <AgendamentoResponseDto> response = new ArrayList<>();
