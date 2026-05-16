@@ -31,6 +31,11 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamento);
     }
 
+    @GetMapping("/ativos")
+    public List<AgendamentoResponseDto> listarAgendamentoAtivos(){
+        return service.listaAgendamentosAtivos();
+    }
+
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity <AgendamentoResponseDto> atualizarAgendamento(@PathVariable Long id, @RequestBody AgendamentoRequestDto request){

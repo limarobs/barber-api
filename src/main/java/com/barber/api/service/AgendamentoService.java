@@ -74,7 +74,19 @@ public class AgendamentoService {
         return toResponseDto(agendamento);
     }
 
-    public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
+    public List<AgendamentoResponseDto> listaAgendamentosAtivos(){
+        List <Agendamento> agendamentos = repository.findByStatus(StatusAgendamento.AGENDADO);
+        List <AgendamentoResponseDto> response = new ArrayList<>();
+
+        for(Agendamento agendamento : agendamentos){
+            AgendamentoResponseDto dto = toResponseDto(agendamento);
+            response.add(dto);
+        }
+        return response;
+    }
+
+
+        public AgendamentoResponseDto atualizaAgendamento(Long id, AgendamentoRequestDto request){
         Optional<Agendamento> agendamentoOptional = repository.findById(id);
         Agendamento agendamento = agendamentoOptional.get();
 
