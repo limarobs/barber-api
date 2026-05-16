@@ -3,13 +3,14 @@ package com.barber.api.controller;
 
 import com.barber.api.dto.AgendamentoRequestDto;
 import com.barber.api.dto.AgendamentoResponseDto;
-import com.barber.api.entity.Agendamento;
 import com.barber.api.service.AgendamentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -41,6 +42,10 @@ public class AgendamentoController {
         return service.listaAgendamentosHoje();
     }
 
+    @GetMapping("/disponiveis")
+    public List<LocalTime> listarAgendamentosDisponiveis(LocalDate data){
+        return service.listaAgendamentosDisponiveis(data);
+    }
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity <AgendamentoResponseDto> atualizarAgendamento(@PathVariable Long id, @RequestBody AgendamentoRequestDto request){

@@ -1,6 +1,5 @@
 package com.barber.api.service;
 
-import com.barber.api.dto.AgendamentoResponseDto;
 import com.barber.api.dto.ClienteRequestDto;
 import com.barber.api.entity.Cliente;
 import com.barber.api.repository.ClienteRepository;
