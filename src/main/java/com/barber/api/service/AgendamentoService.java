@@ -4,6 +4,7 @@ import com.barber.api.dto.AgendamentoRequestDto;
 import com.barber.api.dto.AgendamentoResponseDto;
 import com.barber.api.entity.Agendamento;
 import com.barber.api.entity.Cliente;
+import com.barber.api.enums.StatusAgendamento;
 import com.barber.api.exception.DataInvalidaException;
 import com.barber.api.exception.HorarioIndisponivelException;
 import com.barber.api.repository.AgendamentoRepository;
@@ -74,8 +75,14 @@ public class AgendamentoService {
         return toResponseDto(salvo);
     }
 
-    public void deletaAgendamento(Long id){
-        repository.deleteById(id);
+    public AgendamentoResponseDto cancelaAgendamento(Long id){
+        Optional<Agendamento> agendamentoOptional = repository.findById(id);
+        Agendamento agendamento = agendamentoOptional.get();
+
+        agendamento.setStatus(StatusAgendamento.CANCELADO);
+        Agendamento salvo = repository.save(agendamento);
+
+        return toResponseDto(salvo);
     }
 
     public AgendamentoResponseDto criaAgendamento(AgendamentoRequestDto request){
@@ -97,7 +104,6 @@ public class AgendamentoService {
             throw new HorarioIndisponivelException("Não é possível agendar no passado");
         }
 
-
         Agendamento agendamento = new Agendamento();
 
         Cliente cliente = service.listaClienteId(request.getClienteId());
@@ -105,6 +111,7 @@ public class AgendamentoService {
         agendamento.setCliente(cliente);
         agendamento.setDataHora(request.getDataHora());
 
+        agendamento.setStatus(StatusAgendamento.AGENDADO);
         Agendamento salvo = repository.save(agendamento);
 
         return toResponseDto(salvo);
