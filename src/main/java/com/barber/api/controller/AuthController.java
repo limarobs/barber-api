@@ -8,6 +8,7 @@ import com.barber.api.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,6 +17,7 @@ public class AuthController {
 
     private final UsuarioRepository repository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto>
@@ -29,8 +31,10 @@ public class AuthController {
                                 )
                         );
 
-        if(!usuario.getSenha()
-                .equals(request.getSenha())){
+        if(!passwordEncoder.matches(
+                request.getSenha(),
+                usuario.getSenha()
+        )){
 
             throw new RuntimeException(
                     "Senha inválida"
